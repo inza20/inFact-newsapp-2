@@ -17,7 +17,7 @@ export default class App extends Component {
         <div>
           <Navbar />
           <Routes>
-            {/* <Route exact path='/' element={<News key='general' pageSize={this.pageSize} country='us' category='general' />}></Route> */}
+            <Route exact path='/' element={<News key='general' pageSize={this.pageSize} country='us' category='general' />}></Route>
             <Route exact path='/business' element={<News key='business' pageSize={this.pageSize} country='us' category='business' />}></Route>
             <Route exact path='/entertainment' element={<News key='entertainment' pageSize={this.pageSize} country='us' category='entertainment' />}></Route>
             <Route exact path='/health' element={<News key='health' pageSize={this.pageSize} country='us' category='health' />}></Route>
