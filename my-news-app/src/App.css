@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+
+.navbar-brand{
+  color: rgb(49, 162, 106);
+  font-weight: 600;
+}
