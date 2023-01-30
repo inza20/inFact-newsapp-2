@@ -4,8 +4,6 @@ import Newsitem from "./Newsitem";
 import PropTypes from "prop-types";
 import Spinner from "./Spinner";
 
-// import { ComponentProps } from "react";
-
 export class News extends Component {
   // articles = [
   //   {
@@ -26,8 +24,13 @@ export class News extends Component {
   //   }
   // ];
 
-  constructor() {
-    super();
+  capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  constructor(props) {
+    super(props);
+    document.title=`${this.capitalizeFirstLetter(this.props.category)}`;
     // console.log("Constructor from Newsitem");
     this.state = {
       articles: [],
@@ -82,25 +85,7 @@ export class News extends Component {
     this.updateNews();
   };
 
-  nextClickHandler = async () => {
-    // console.log("next");
-    // if (
-    //   !this.state.page + 1 >
-    //   Math.ceil(this.state.totalResults / this.props.pageSize)
-    // ) {
-    //   // then do nothing
-    // } else {
-    //   let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=078def2b67564bf0ae8c5ea47a195d13&page=${     this.state.page + 1}&pageSize=${this.props.pageSize}`;
-    //   this.setState({loading : true});
-    //   let data = await fetch(url);
-    //   let parsedData = await data.json();
-    //   console.log(parsedData);
-    //   this.setState({
-    //     page: this.state.page + 1,
-    //     articles: parsedData.articles,
-    //     loading : false
-    //   });
-    // }
+  nextClickHandler = async () => {    
     this.setState({page: this.state.page +1})
     this.updateNews();
   };
@@ -117,23 +102,15 @@ export class News extends Component {
         {/* <Spinner/> */}
 
         <div className="row ">
-          {this.state.articles?.map((element) => {
+          {/* with prev & next buttons , use-> {!this.state.loading && this.state.articles?.map((element) => */}
+          {/* for infinite scroll -> remove loading condition :  */}
+          { this.state.articles?.map((element) => {
             return (
-              <div
-                className="col-md-4"
-                key={element.url}
-                style={{ margin: "1rem 0rem" }}
-              >
+              <div  className="col-md-4" key={element.url} style={{ margin: "1rem 0rem" }}              >
                 <Newsitem
                   title={element.title ? element.title.slice(0, 50) : ""}
-                  description={
-                    element.description ? element.description.slice(0, 100) : ""
-                  }
-                  imageUrl={
-                    element.urlToImage
-                      ? element.urlToImage
-                      : "https://i.ytimg.com/vi/pvj2RpLpaWI/maxresdefault.jpg"
-                  }
+                  description={element.description ? element.description.slice(0, 100) : ""}
+                  imageUrl={ element.urlToImage ? element.urlToImage : "https://i.ytimg.com/vi/pvj2RpLpaWI/maxresdefault.jpg" }
                   newsUrl={element.url? element.url : "https://nypost.com/2023/01/25/bristol-palin-reveals-9th-breast-reconstruction-very-self-conscious/"} author={element.author?element.author:"unknown author"} date={element.publishedAt}
                 />
               </div>
@@ -144,26 +121,11 @@ export class News extends Component {
         <div className="row">
           <div className="d-flex justify-content-between">
             <button
-              type="button"
-              className="btn btn-success"
-              onClick={this.prevClickHandler}
-              href="/"
-              disabled={this.state.page <= 1}
-            >
-              {" "}
-              &larr; Prev
+              type="button" className="btn btn-success" onClick={this.prevClickHandler} href="/" disabled={this.state.page <= 1} > {" "} &larr; Prev 
             </button>
             <button
-              type="button"
-              className="btn btn-success"
-              onClick={this.nextClickHandler}
-              href="/"
-              disabled={
-                this.state.page + 1 >
-                Math.ceil(this.state.totalResults / this.props.pageSize)
-              }
-            >
-              Next &rarr;
+              type="button" className="btn btn-success" onClick={this.nextClickHandler} href="/" 
+              disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize)}> Next &rarr;
             </button>
           </div>
           
