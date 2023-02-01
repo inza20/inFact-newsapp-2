@@ -12,6 +12,7 @@ export default class App extends Component {
   pageSize = 60;
   // apiKey = process.env.REACT_APP_NEWS_API;
   apiKey = "078def2b67564bf0ae8c5ea47a195d13";
+  // to be hidden
 
   state = {
     progress : 0
