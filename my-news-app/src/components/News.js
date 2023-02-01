@@ -3,8 +3,20 @@ import React, { Component } from "react";
 import Newsitem from "./Newsitem";
 import PropTypes from "prop-types";
 import Spinner from "./Spinner";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export class News extends Component {
+  static defaultProps={
+    country : 'in',
+    pageSize : 8,
+    category : 'general'
+  }
+
+  static propTypes={
+    country : PropTypes.string,
+    pageSize : PropTypes.number,
+    category : PropTypes.string
+  }
   // articles = [
   //   {
   //     source: {
@@ -34,35 +46,59 @@ export class News extends Component {
     // console.log("Constructor from Newsitem");
     this.state = {
       articles: [],
-      loading: false,
+      // loading: false, // for prev & next buttons
+      loading : true, // for infinite scroll
       page: 1,
-    };
+      totalResults: 0
+    }
   }
+
+  
 
   async updateNews(){
     const url =
     `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=078def2b67564bf0ae8c5ea47a195d13&page=${this.state.page}&pageSize=${this.props.pageSize}`;
-  let data = await fetch(url);
-  let parsedData = await data.json();
-  // console.log(parsedData);
-  this.setState({
-    articles: parsedData.articles,
-    totalResults: parsedData.totalResults,
-  });
-  }
 
-  async componentDidMount() {
-    // console.log("cdm");
-    let url =
-      `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=078def2b67564bf0ae8c5ea47a195d13&page=1&pageSize=${this.props.pageSize}`;
+    this.setState({loading: true});
     let data = await fetch(url);
     let parsedData = await data.json();
     // console.log(parsedData);
     this.setState({
       articles: parsedData.articles,
       totalResults: parsedData.totalResults,
-    });
+      loading: false
+    })
   }
+
+  async componentDidMount() {
+    // console.log("cdm");
+    // let url =
+    //   `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=078def2b67564bf0ae8c5ea47a195d13&page=1&pageSize=${this.props.pageSize}`;
+    // let data = await fetch(url);
+    // let parsedData = await data.json();
+    // // console.log(parsedData);
+    // this.setState({
+    //   articles: parsedData.articles,
+    //   totalResults: parsedData.totalResults,
+    // });
+    this.updateNews();
+  }
+
+  fetchMoreData = async() => {    
+    
+    this.setState({page : this.state.page=1});
+    const url =
+    `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=078def2b67564bf0ae8c5ea47a195d13&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+    
+    let data = await fetch(url);
+    let parsedData = await data.json();
+    // console.log(parsedData);
+    this.setState({
+      articles: this.state.articles.concat(parsedData.articles),
+      totalResults: parsedData.totalResults
+    })
+ 
+};
 
   prevClickHandler = async () => {
     // console.log("prev");
@@ -92,14 +128,23 @@ export class News extends Component {
 
   render() {
     return (
-      <div className="container my-3" style={{ positon: "center" }}>
+      <>
+      {/* <div className="container my-3" style={{ positon: "center" }}> */}
         <h2 style={{ textAlign: "center", margin: "20px 0px 40px 0px" }}>
           {" "}
-          InFact - Top Headlines{" "}
+          InFact - Top {this.capitalizeFirstLetter(this.props.category)} Headlines
         </h2>
 
         {this.state.loading && <Spinner/>}        
         {/* <Spinner/> */}
+
+        <InfiniteScroll
+          dataLength={this.state.articles.length}
+          next={this.fetchMoreData}
+          hasMore={this.state.articles.length !== this.state.totalResults}
+          loader={<Spinner/>}
+        >
+        <div className="container">
 
         <div className="row ">
           {/* with prev & next buttons , use-> {!this.state.loading && this.state.articles?.map((element) => */}
@@ -118,7 +163,10 @@ export class News extends Component {
           })}
         </div>
 
-        <div className="row">
+        </div>
+        </InfiniteScroll>
+
+        {/* <div className="row">
           <div className="d-flex justify-content-between">
             <button
               type="button" className="btn btn-success" onClick={this.prevClickHandler} href="/" disabled={this.state.page <= 1} > {" "} &larr; Prev 
@@ -129,22 +177,23 @@ export class News extends Component {
             </button>
           </div>
           
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
+      </>
     );
   }
 }
 
-News.defaultProps = {
-  pageSize: 15,
-  country: "us",
-  category: "science"
-};
+// News.defaultProps = {
+//   pageSize: 15,
+//   country: "us",
+//   category: "science"
+// };
 
-News.propTypes = {
-  pageSize: PropTypes.number,
-  country : PropTypes.string
+// News.propTypes = {
+//   pageSize: PropTypes.number,
+//   country : PropTypes.string
 
-};
+// };
 
 export default News;
