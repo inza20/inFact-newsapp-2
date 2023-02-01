@@ -8,7 +8,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 export class News extends Component {
   static defaultProps={
     country : 'in',
-    pageSize : 8,
+    pageSize : 6,
     category : 'general'
   }
 
@@ -57,11 +57,14 @@ export class News extends Component {
 
   async updateNews(){
     const url =
-    `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=078def2b67564bf0ae8c5ea47a195d13&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+    `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page}&pageSize=${this.props.pageSize}`;
 
     this.setState({loading: true});
+    {this.props.setProgress(10)}
     let data = await fetch(url);
+    {this.props.setProgress(50)}
     let parsedData = await data.json();
+    {this.props.setProgress(100)}
     // console.log(parsedData);
     this.setState({
       articles: parsedData.articles,
@@ -73,7 +76,7 @@ export class News extends Component {
   async componentDidMount() {
     // console.log("cdm");
     // let url =
-    //   `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=078def2b67564bf0ae8c5ea47a195d13&page=1&pageSize=${this.props.pageSize}`;
+    //   `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=1&pageSize=${this.props.pageSize}`;
     // let data = await fetch(url);
     // let parsedData = await data.json();
     // // console.log(parsedData);
@@ -88,7 +91,7 @@ export class News extends Component {
     
     this.setState({page : this.state.page=1});
     const url =
-    `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=078def2b67564bf0ae8c5ea47a195d13&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+    `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -106,7 +109,7 @@ export class News extends Component {
   //   if(!this.state.page > Math.ceil(this.state.pageSize)){
   //     // then do nothing
   //   } else {
-  //   let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=078def2b67564bf0ae8c5ea47a195d13&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
+  //   let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
 
   //   this.setState({loading: true})
 
@@ -146,22 +149,22 @@ export class News extends Component {
         >
         <div className="container">
 
-        <div className="row ">
-          {/* with prev & next buttons , use-> {!this.state.loading && this.state.articles?.map((element) => */}
-          {/* for infinite scroll -> remove loading condition :  */}
-          { this.state.articles?.map((element) => {
-            return (
-              <div  className="col-md-4" key={element.url} style={{ margin: "1rem 0rem" }}              >
-                <Newsitem
-                  title={element.title ? element.title.slice(0, 50) : ""}
-                  description={element.description ? element.description.slice(0, 100) : ""}
-                  imageUrl={ element.urlToImage ? element.urlToImage : "https://i.ytimg.com/vi/pvj2RpLpaWI/maxresdefault.jpg" }
-                  newsUrl={element.url? element.url : "https://nypost.com/2023/01/25/bristol-palin-reveals-9th-breast-reconstruction-very-self-conscious/"} author={element.author?element.author:"unknown author"} date={element.publishedAt}
-                />
-              </div>
-            );
-          })}
-        </div>
+          <div className="row ">
+            {/* with prev & next buttons , use-> {!this.state.loading && this.state.articles?.map((element) => */}
+            {/* for infinite scroll -> remove loading condition :  */}
+            { this.state.articles?.map((element) => {
+              return (
+                <div  className="col-md-4" key={element.url} style={{ margin: "1rem 0rem" }}>
+                  <Newsitem
+                    title={element.title ? element.title.slice(0, 50) : ""}
+                    description={element.description ? element.description.slice(0, 100) : ""}
+                    imageUrl={ element.urlToImage ? element.urlToImage : "https://i.ytimg.com/vi/pvj2RpLpaWI/maxresdefault.jpg" }
+                    newsUrl={element.url? element.url : "https://nypost.com/2023/01/25/bristol-palin-reveals-9th-breast-reconstruction-very-self-conscious/"} author={element.author?element.author:"unknown author"} date={element.publishedAt}
+                  />
+                </div>
+              );
+            })}
+          </div>
 
         </div>
         </InfiniteScroll>
