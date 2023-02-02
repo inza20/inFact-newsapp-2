@@ -35,7 +35,7 @@ export default function News (props) {
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
-  document.title=capitalizeFirstLetter(props.category);  
+  
 
   const updateNews = async()=> {
     const url =
@@ -56,7 +56,9 @@ export default function News (props) {
   }
 
   useEffect(() => { 
+      document.title=`${capitalizeFirstLetter(props.category)}`;  
       updateNews();
+      //eslint-disable-next-line-after-update-news
   }, [])
   
 
@@ -64,7 +66,7 @@ export default function News (props) {
     
     setPage(page=1);
     const url =
-    `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page}&pageSize=${props.pageSize}`;
+    `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page+1}&pageSize=${props.pageSize}`;
     
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -88,7 +90,7 @@ export default function News (props) {
     return (
       <>
       {/* <div className="container my-3" style={{ positon: "center" }}> */}
-        <h2 style={{ textAlign: "center", margin: "20px 0px 40px 0px" }}>
+        <h2 style={{ textAlign: "center", margin: "20px 0px 40px 0px", marginTop: "90px" }}>
           {" "}
           InFact - Top {capitalizeFirstLetter(props.category)} Headlines
         </h2>
