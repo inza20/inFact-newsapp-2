@@ -2,13 +2,8 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import {Link} from "react-router-dom";
 
-export class Navbar extends Component {
-  static propTypes = {
-    country : PropTypes.string,
-    pageSize : PropTypes.number
-  };
-
-  render() {
+export default function Navbar () {
+  
     return (
     <div>
 
@@ -54,6 +49,11 @@ export class Navbar extends Component {
     </div>
     );
   }
+
+
+Navbar.propTypes = {
+  country : PropTypes.string,
+  pageSize : PropTypes.number
 }
 
-export default Navbar;
+// export default Navbar;
